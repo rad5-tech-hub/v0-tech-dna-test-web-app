@@ -139,7 +139,7 @@ export default function OnboardingFlow({ onComplete }: OnboardingFlowProps) {
 
                 <div className="bg-secondary/10 border border-secondary/20 rounded-lg p-4 transition-all duration-300 hover:bg-secondary/15">
                   <p className="text-sm text-foreground/80 leading-relaxed">
-                    This test will take approximately <strong>10–12 minutes</strong>. Answer as honestly as possible.
+                    This test will take approximately <strong>15–20 minutes</strong>. Answer as honestly as possible.
                     There are no right or wrong answers.
                   </p>
                 </div>

@@ -124,15 +124,135 @@ export function generatePDF(session: TestSession) {
 
 // lib/pdf-export.ts (client-side)
 
-export async function generatePDFBlob(session: any): Promise<Blob> {
+/**
+ * Generate a PDF Blob for the given session.
+ * Returns a Blob which you can:
+ *  - convert to base64 and POST to server,
+ *  - createObjectURL to preview,
+ *  - or trigger a download if you want.
+ */
+export async function generatePDFBlob(session: TestSession): Promise<Blob> {
+  if (!session.results) throw new Error("Session results missing");
+
   const doc = new jsPDF({ unit: "pt", format: "a4" });
+  const pageWidth = doc.internal.pageSize.getWidth();
+  const pageHeight = doc.internal.pageSize.getHeight();
+  let yPosition = 20;
+
+  // Header
+  doc.setFontSize(24);
+  doc.setTextColor(37, 64, 122); // Primary color
+  doc.text("RAD5 TechDNA Test", pageWidth / 2, yPosition, { align: "center" });
+
+  yPosition += 15;
+  doc.setFontSize(12);
+  doc.setTextColor(100, 100, 100);
+  doc.text("Your Digital Career Path Report", pageWidth / 2, yPosition, { align: "center" });
+
+  // User Info
+  yPosition += 20;
+  doc.setFontSize(11);
+  doc.setTextColor(0, 0, 0);
+  doc.text(`Name: ${session.name}`, 20, yPosition);
+  yPosition += 12;
+  doc.text(`Gender: ${session.gender}`, 20, yPosition);
+  yPosition += 12;
+  doc.text(`Test Duration: ${session.results.timeTaken} minutes`, 20, yPosition);
+  yPosition += 12;
+  doc.text(`Date: ${new Date().toLocaleString()}`, 20, yPosition);
+
+  // Results Section
+  yPosition += 22;
   doc.setFontSize(14);
-  doc.text(`RAD5 TechDNA Report - ${session.name}`, 40, 50);
-  // ... add rest of PDF content similar to your PDF generation logic
-  // return blob:
+  doc.setTextColor(37, 64, 122);
+  doc.text("Your Results", 20, yPosition);
+
+  yPosition += 14;
+  doc.setFontSize(10);
+  doc.setTextColor(0, 0, 0);
+
+  const skills = ["Data Analytics", "Cybersecurity", "Web Development", "Product Design", "Digital Marketing"];
+  const percentages = session.results.percentages ?? {};
+
+  for (const skill of skills) {
+    // new page handling
+    if (yPosition > pageHeight - 120) {
+      doc.addPage();
+      yPosition = 40;
+    }
+
+    const percentage = percentages[skill] ?? 0;
+    doc.text(`${skill}: ${percentage}%`, 20, yPosition);
+
+    // Draw progress bar
+    const barX = 120;
+    const barWidth = 220; // wider for readability on A4
+    const barHeight = 6;
+    doc.setDrawColor(200, 200, 200);
+    doc.rect(barX, yPosition - 6, barWidth, barHeight);
+
+    doc.setFillColor(37, 64, 122);
+    const fillWidth = (barWidth * Math.max(0, Math.min(100, percentage))) / 100;
+    if (fillWidth > 0) doc.rect(barX, yPosition - 6, fillWidth, barHeight, "F");
+
+    yPosition += 18;
+  }
+
+  // Top Skill
+  if (yPosition > pageHeight - 120) {
+    doc.addPage();
+    yPosition = 40;
+  }
+  yPosition += 6;
+  doc.setFontSize(12);
+  doc.setTextColor(37, 64, 122);
+  doc.text(`Top Match: ${session.results.topSkill}`, 20, yPosition);
+
+  // Recommendation
+  yPosition += 18;
+  doc.setFontSize(10);
+  doc.setTextColor(0, 0, 0);
+
+  const recommendations: Record<string, string> = {
+    "Data Analytics":
+      "You have a strong natural alignment toward Data Analytics due to your analytical mindset, attention to detail, and ability to find patterns in complex information. Consider exploring foundational data science and business intelligence learning paths.",
+    Cybersecurity:
+      "You have a strong natural alignment toward Cybersecurity due to your analytical mindset, love for structure, and desire to protect systems and information. Consider exploring foundational cybersecurity learning paths.",
+    "Web Development":
+      "You have a strong natural alignment toward Web Development due to your creative problem-solving skills, attention to user experience, and technical curiosity. Consider exploring full-stack development frameworks and modern web technologies.",
+    "Product Design":
+      "You have a strong natural alignment toward Product Design due to your user-centric thinking, creative vision, and ability to balance aesthetics with functionality. Consider exploring UX/UI design principles and prototyping tools.",
+    "Digital Marketing":
+      "You have a strong natural alignment toward Digital Marketing due to your communication skills, strategic thinking, and ability to understand audience behavior. Consider exploring digital marketing strategies and analytics platforms.",
+  };
+
+  const recommendation = recommendations[session.results.topSkill] ?? "";
+  const splitText = doc.splitTextToSize(recommendation, pageWidth - 40);
+  doc.text(splitText, 20, yPosition);
+
+  yPosition += (splitText.length * 12) + 12;
+
+  // Contact Info
+  if (yPosition > pageHeight - 120) {
+    doc.addPage();
+    yPosition = 40;
+  }
+  doc.setFontSize(10);
+  doc.setTextColor(100, 100, 100);
+  doc.text("For personalized guidance, contact:", 20, yPosition);
+  yPosition += 12;
+  doc.text("Phone: +234 706 434 3189", 20, yPosition);
+  yPosition += 12;
+  doc.text("Email: info@rad5.com.ng", 20, yPosition);
+  yPosition += 12;
+  doc.text("Website: www.rad5.com.ng", 20, yPosition);
+
+  // Footer
+  doc.setFontSize(8);
+  doc.setTextColor(150, 150, 150);
+  doc.text("Powered by RAD5 Tech Hub | Discover Your Digital DNA", pageWidth / 2, pageHeight - 10, { align: "center" });
+
+  // Return Blob instead of saving (so caller can upload/attach)
   const blob = doc.output("blob");
-  // optionally trigger download:
-  // const url = URL.createObjectURL(blob); // download if needed
-  // const a = document.createElement('a'); a.href = url; a.download = `RAD5_Report_${session.name}.pdf`; a.click();
   return blob;
 }

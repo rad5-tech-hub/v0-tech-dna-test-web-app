@@ -185,35 +185,7 @@ export default function ResultsDashboard({ session, onRetake }: ResultsDashboard
   }, [session]);
 
 
-  //  async function saveReportToSheets(finalSession: TestSession) {
-  //     const payload = {
-  //       session: {
-  //         // keep payload minimal and serializable
-  //         name: finalSession.name,
-  //         gender: finalSession.gender,
-  //         email: finalSession.email ?? "",
-  //         date: new Date().toISOString(),
-  //         timeTaken: finalSession.results?.timeTaken ?? null,
-  //         topSkill: finalSession.results?.topSkill ?? "",
-  //         percentages: finalSession.results?.percentages ?? {},
-  //         testId: finalSession.startTime ?? Date.now(), // idempotency key
-  //       },
-  //     }
-  
-  //     const res = await fetch("/api/save-report", {
-  //       method: "POST",
-  //       headers: { "Content-Type": "application/json" },
-  //       body: JSON.stringify(payload),
-  //     })
-  
-  //     const data = await res.json()
-  //     if (!res.ok) throw new Error(data?.message || "Failed to save report")
-  //     return data
-  //   }
 
-  //   useEffect(()=>{
-  //     saveReportToSheets(session)
-  //   },[])
 
   if (!session.results) return null
 
