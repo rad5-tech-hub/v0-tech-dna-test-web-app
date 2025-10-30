@@ -6,12 +6,13 @@ import { Input } from "@/components/ui/input"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 
 interface OnboardingFlowProps {
-  onComplete: (name: string, gender: string) => void
+  onComplete: (name: string, gender: string,email:string) => void
 }
 
 export default function OnboardingFlow({ onComplete }: OnboardingFlowProps) {
   const [name, setName] = useState("")
   const [gender, setGender] = useState("")
+  const [email, setEmail] = useState("")
   const [countdown, setCountdown] = useState<number | null>(null)
   const [showCountdown, setShowCountdown] = useState(false)
   const [isVisible, setIsVisible] = useState(false)
@@ -25,7 +26,7 @@ export default function OnboardingFlow({ onComplete }: OnboardingFlowProps) {
 
     const timer = setTimeout(() => {
       if (countdown === 0) {
-        onComplete(name, gender)
+        onComplete(name, gender,email)
       } else {
         setCountdown(countdown - 1)
       }
@@ -66,6 +67,17 @@ export default function OnboardingFlow({ onComplete }: OnboardingFlowProps) {
                     placeholder="Enter your full name"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
+                    className="bg-input border-border transition-all duration-200 focus:ring-2 focus:ring-primary/50"
+                  />
+                </div>
+
+                <div>
+                  <label className="text-sm font-medium text-foreground mb-2 block">Email (Optional if you want you report emailed to you)</label>
+                  <Input
+                    placeholder="Enter your Email"
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
                     className="bg-input border-border transition-all duration-200 focus:ring-2 focus:ring-primary/50"
                   />
                 </div>

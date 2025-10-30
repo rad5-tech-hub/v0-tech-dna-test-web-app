@@ -4,7 +4,8 @@ import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Progress } from "@/components/ui/progress"
-import { QUESTIONS } from "@/lib/questions"
+// import { QUESTIONS } from "@/lib/questions"
+import { questionsTests as QUESTIONS } from "@/lib/test"
 import { calculateScores } from "@/lib/scoring"
 
 interface TestSession {
@@ -29,7 +30,7 @@ export default function QuestionEngine({ session, onComplete }: QuestionEnginePr
   useEffect(() => {
     // Shuffle and select 50 random questions
     const shuffled = [...QUESTIONS].sort(() => Math.random() - 0.5)
-    setSelectedQuestions(shuffled.slice(0, 50))
+    setSelectedQuestions(shuffled.slice(0, 1))
     setIsLoading(false)
   }, [])
 

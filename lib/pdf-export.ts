@@ -120,3 +120,19 @@ export function generatePDF(session: TestSession) {
   // Save PDF
   doc.save(`RAD5_TechDNA_Report_${session.name.replace(/\s+/g, "_")}.pdf`)
 }
+
+
+// lib/pdf-export.ts (client-side)
+
+export async function generatePDFBlob(session: any): Promise<Blob> {
+  const doc = new jsPDF({ unit: "pt", format: "a4" });
+  doc.setFontSize(14);
+  doc.text(`RAD5 TechDNA Report - ${session.name}`, 40, 50);
+  // ... add rest of PDF content similar to your PDF generation logic
+  // return blob:
+  const blob = doc.output("blob");
+  // optionally trigger download:
+  // const url = URL.createObjectURL(blob); // download if needed
+  // const a = document.createElement('a'); a.href = url; a.download = `RAD5_Report_${session.name}.pdf`; a.click();
+  return blob;
+}

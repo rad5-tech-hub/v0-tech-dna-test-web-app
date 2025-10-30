@@ -4,13 +4,15 @@ import { useState } from "react"
 import OnboardingFlow from "@/components/onboarding-flow"
 import QuestionEngine from "@/components/question-engine"
 import ResultsDashboard from "@/components/results-dashboard"
+import { Toaster, toast } from "sonner"
 
 type AppState = "onboarding" | "test" | "results"
 
-interface TestSession {
+export interface TestSession {
   name: string
   gender: string
   startTime: number
+  email: string
   answers: Record<number, number>
   results?: {
     scores: Record<string, number>
@@ -23,10 +25,11 @@ export default function Home() {
   const [appState, setAppState] = useState<AppState>("onboarding")
   const [session, setSession] = useState<TestSession | null>(null)
 
-  const handleOnboardingComplete = (name: string, gender: string) => {
+  const handleOnboardingComplete = (name: string, gender: string, email: string) => {
     setSession({
       name,
       gender,
+      email,
       startTime: Date.now(),
       answers: {},
     })
@@ -56,6 +59,10 @@ export default function Home() {
       {appState === "results" && session && session.results && (
         <ResultsDashboard session={session} onRetake={handleRetakeTest} />
       )}
+      <Toaster
+        position="top-right"
+
+      />
     </main>
   )
 }
