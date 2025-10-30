@@ -185,6 +185,36 @@ export default function ResultsDashboard({ session, onRetake }: ResultsDashboard
   }, [session]);
 
 
+  //  async function saveReportToSheets(finalSession: TestSession) {
+  //     const payload = {
+  //       session: {
+  //         // keep payload minimal and serializable
+  //         name: finalSession.name,
+  //         gender: finalSession.gender,
+  //         email: finalSession.email ?? "",
+  //         date: new Date().toISOString(),
+  //         timeTaken: finalSession.results?.timeTaken ?? null,
+  //         topSkill: finalSession.results?.topSkill ?? "",
+  //         percentages: finalSession.results?.percentages ?? {},
+  //         testId: finalSession.startTime ?? Date.now(), // idempotency key
+  //       },
+  //     }
+  
+  //     const res = await fetch("/api/save-report", {
+  //       method: "POST",
+  //       headers: { "Content-Type": "application/json" },
+  //       body: JSON.stringify(payload),
+  //     })
+  
+  //     const data = await res.json()
+  //     if (!res.ok) throw new Error(data?.message || "Failed to save report")
+  //     return data
+  //   }
+
+  //   useEffect(()=>{
+  //     saveReportToSheets(session)
+  //   },[])
+
   if (!session.results) return null
 
   return (
@@ -346,38 +376,39 @@ export default function ResultsDashboard({ session, onRetake }: ResultsDashboard
           </Card>
 
           {/* Actions */}
-          <div className="flex gap-3">
-            <Button
-              onClick={() => generatePDF(session)}
-              className="flex-1 bg-accent hover:bg-accent/90 text-accent-foreground transition-all duration-200 transform hover:scale-105"
-              size="lg"
-            >
-              Download PDF Report
-            </Button>
+         <div className="flex flex-col md:flex-row gap-3 w-full mx-auto">
+  <Button
+    onClick={() => generatePDF(session)}
+    className="w-full md:flex-1 py-4 text-base bg-accent hover:bg-accent/90 text-accent-foreground transition-all duration-200 transform hover:scale-105"
+    size="lg"
+  >
+    Download PDF Report
+  </Button>
 
-            {session.email && (
-              <Button
-                onClick={handleEmailReport}
-                variant="outline"
-                disabled={mailButtonLoading}
-                className="flex-1 bg-transparent transition-all duration-200 transform hover:scale-105 flex items-center justify-center gap-2"
-                size="lg"
-                aria-busy={mailButtonLoading}
-              >
-                {mailButtonLoading ? <Loader className="animate-spin h-4 w-4" /> : <Mail className="h-4 w-4" />}
-                <span>{mailButtonLoading ? "Sending..." : "Email Report"}</span>
-              </Button>
-            )}
+  {session.email && (
+    <Button
+      onClick={handleEmailReport}
+      variant="outline"
+      disabled={mailButtonLoading}
+      className="w-full md:flex-1 py-4 text-base bg-transparent transition-all duration-200 transform hover:scale-105 flex items-center justify-center gap-2"
+      size="lg"
+      aria-busy={mailButtonLoading}
+    >
+      {mailButtonLoading ? <Loader className="animate-spin h-4 w-4" /> : <Mail className="h-4 w-4" />}
+      <span>{mailButtonLoading ? "Sending..." : "Email Report"}</span>
+    </Button>
+  )}
 
-            <Button
-              onClick={onRetake}
-              variant="outline"
-              className="flex-1 bg-transparent transition-all duration-200 transform hover:scale-105"
-              size="lg"
-            >
-              Retake Test
-            </Button>
-          </div>
+  <Button
+    onClick={onRetake}
+    variant="outline"
+    className="w-full md:flex-1 py-4 text-base bg-transparent transition-all duration-200 transform hover:scale-105"
+    size="lg"
+  >
+    Retake Test
+  </Button>
+</div>
+
 
           {mailError && <p className="mt-3 text-sm text-destructive">{mailError}</p>}
         </div>
