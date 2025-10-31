@@ -50,7 +50,7 @@ export default function Home() {
         email: finalSession.email ?? "",
         date: new Date().toISOString(),
         timeTaken: finalSession.results?.timeTaken ?? null,
-        intendedTrack:finalSession.intendedTrack,
+        intendedTrack:finalSession?.intendedTrack || "",
         topSkill: finalSession.results?.topSkill ?? "",
         percentages: finalSession.results?.percentages ?? {},
         testId: finalSession.startTime ?? Date.now(), // idempotency key
