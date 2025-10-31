@@ -25,7 +25,8 @@ interface TestSession {
   gender: string
   startTime: number
   email: string
-  answers: Record<number, number>
+  answers: Record<number, number>,
+  intendedTrack?:string,
   results?: {
     scores: Record<string, number>
     percentages: Record<string, number>
@@ -222,6 +223,8 @@ export default function ResultsDashboard({ session, onRetake }: ResultsDashboard
                   <p className="text-sm text-muted-foreground mb-1">Time Taken</p>
                   <p className="text-lg font-semibold text-foreground">{session.results.timeTaken} minute(s)</p>
                 </div>
+
+                
               </div>
             </CardContent>
           </Card>
@@ -367,7 +370,7 @@ export default function ResultsDashboard({ session, onRetake }: ResultsDashboard
       aria-busy={mailButtonLoading}
     >
       {mailButtonLoading ? <Loader className="animate-spin h-4 w-4" /> : <Mail className="h-4 w-4" />}
-      <span>{mailButtonLoading ? "Sending..." : "Email Report"}</span>
+      <span>{mailButtonLoading ? "Sending..." : "Email Result"}</span>
     </Button>
   )}
 

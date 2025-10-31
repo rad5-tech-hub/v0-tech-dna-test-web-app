@@ -5,7 +5,8 @@ import OnboardingFlow from "@/components/onboarding-flow"
 import QuestionEngine from "@/components/question-engine"
 import ResultsDashboard from "@/components/results-dashboard"
 import { Toaster, toast } from "sonner"
-
+import "@radix-ui/themes/styles.css";
+import { Theme } from "@radix-ui/themes"
 type AppState = "onboarding" | "test" | "results"
 
 export interface TestSession {
@@ -13,7 +14,8 @@ export interface TestSession {
   gender: string
   startTime: number
   email: string
-  answers: Record<number, number>
+  answers: Record<number, number>,
+  intendedTrack?:string,
   results?: {
     scores: Record<string, number>
     percentages: Record<string, number>
@@ -26,11 +28,12 @@ export default function Home() {
   const [appState, setAppState] = useState<AppState>("onboarding")
   const [session, setSession] = useState<TestSession | null>(null)
 
-  const handleOnboardingComplete = (name: string, gender: string, email: string) => {
+  const handleOnboardingComplete = (name: string, gender: string, email: string,intendedTrack?:string) => {
     setSession({
       name,
       gender,
       email,
+      intendedTrack,
       startTime: Date.now(),
       answers: {},
     })
@@ -47,6 +50,7 @@ export default function Home() {
         email: finalSession.email ?? "",
         date: new Date().toISOString(),
         timeTaken: finalSession.results?.timeTaken ?? null,
+        intendedTrack:finalSession?.intendedTrack || "",
         topSkill: finalSession.results?.topSkill ?? "",
         percentages: finalSession.results?.percentages ?? {},
         testId: finalSession.startTime ?? Date.now(), // idempotency key
@@ -103,6 +107,8 @@ export default function Home() {
   }
 
   return (
+    <>
+    <Theme accentColor="blue">
     <main className="min-h-screen bg-background">
       {appState === "onboarding" && <OnboardingFlow onComplete={handleOnboardingComplete} />}
       {appState === "test" && session && <QuestionEngine session={session} onComplete={handleTestComplete} />}
@@ -111,5 +117,7 @@ export default function Home() {
       )}
       <Toaster position="top-right" />
     </main>
+    </Theme>
+    </>
   )
 }
