@@ -1,13 +1,15 @@
 "use client"
 
 import { useEffect, useState } from "react"
+import { Select } from "@radix-ui/themes"
+import Image from "next/image"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Toaster, toast } from "sonner"
 
 interface OnboardingFlowProps {
-  onComplete: (name: string, gender: string, email: string) => void
+  onComplete: (name: string, gender: string, email: string, intendedTrack?: string) => void
 }
 
 export default function OnboardingFlow({ onComplete }: OnboardingFlowProps) {
@@ -15,6 +17,7 @@ export default function OnboardingFlow({ onComplete }: OnboardingFlowProps) {
   const [gender, setGender] = useState("")
   const [email, setEmail] = useState("")
   const [countdown, setCountdown] = useState<number | null>(null)
+  const [intendedTrack, setIntendedTrack] = useState("")
   const [showCountdown, setShowCountdown] = useState(false)
   const [isVisible, setIsVisible] = useState(false)
   const [emailError, setEmailError] = useState<string | null>(null)
@@ -28,7 +31,7 @@ export default function OnboardingFlow({ onComplete }: OnboardingFlowProps) {
 
     const timer = setTimeout(() => {
       if (countdown === 0) {
-        onComplete(name.trim(), gender, email.trim())
+        onComplete(name.trim(), gender, email.trim(), intendedTrack)
       } else {
         setCountdown((c) => (c !== null ? c - 1 : c))
       }
@@ -74,15 +77,14 @@ export default function OnboardingFlow({ onComplete }: OnboardingFlowProps) {
   return (
     <>
       <div
-        className={`min-h-screen flex items-center justify-center bg-gradient-to-br from-primary/5 via-background to-secondary/5 p-4 transition-opacity duration-500 ${
-          isVisible ? "opacity-100" : "opacity-0"
-        }`}
+        className={`min-h-screen flex items-center justify-center bg-gradient-to-br from-primary/5 via-background to-secondary/5 p-4 transition-opacity duration-500 ${isVisible ? "opacity-100" : "opacity-0"
+          }`}
       >
         <Card className="w-full max-w-md shadow-lg hover:shadow-xl transition-shadow duration-300">
           <CardHeader className="text-center">
             <div className="mb-4">
               <div className="inline-block bg-primary/10 rounded-lg p-3 mb-4 transform transition-transform duration-500 hover:scale-105">
-                <div className="text-3xl font-bold text-primary">RAD5</div>
+                <Image src={"logo.png"} alt="RAD5 Logo" width={"100"} height={"100"} />
               </div>
             </div>
             <CardTitle className="text-3xl">TechDNA Test</CardTitle>
@@ -105,7 +107,7 @@ export default function OnboardingFlow({ onComplete }: OnboardingFlowProps) {
 
                   <div>
                     <label className="text-sm font-medium text-foreground mb-2 block">
-                      Email (Optional if you want your report emailed to you)
+                      Email (Your result will be emailed to you)
                     </label>
                     <Input
                       placeholder="Enter your Email"
@@ -118,23 +120,50 @@ export default function OnboardingFlow({ onComplete }: OnboardingFlowProps) {
                   </div>
 
                   <div>
+                    <label className="text-sm font-medium text-foreground mb-2 block">What track do you intend on going for?</label>
+                    <div className=" gap-2">
+
+                      <Select.Root defaultValue="Cybersecurity" onValueChange={(value) => {
+                        setIntendedTrack(value)
+                      }}>
+                        <Select.Trigger className="w-full!" />
+                        <Select.Content className="w-full!" position="popper">
+                          <Select.Group>
+                            {
+                              ["Data Analytics", "Cybersecurity", "Web Development", "Product Design", "Digital Marketing"].map((item) => {
+                                return <>
+                                  <Select.Item value={item}>{item}</Select.Item>
+                                </>
+                              })
+                            }
+                          </Select.Group>
+                        </Select.Content>
+                      </Select.Root>
+
+                    </div>
+                  </div>
+
+                  <div>
                     <label className="text-sm font-medium text-foreground mb-2 block">Gender</label>
                     <div className="grid grid-cols-3 gap-2">
                       {["Male", "Female", "Other"].map((option) => (
                         <button
                           key={option}
                           onClick={() => setGender(option)}
-                          className={`py-2 px-3 rounded-md text-sm font-medium transition-all duration-200 transform ${
-                            gender === option
-                              ? "bg-primary text-primary-foreground scale-105 shadow-md"
-                              : "bg-muted text-muted-foreground hover:bg-muted/80 hover:scale-102"
-                          }`}
+                          className={`py-2 px-3 rounded-md text-sm font-medium transition-all duration-200 transform ${gender === option
+                            ? "bg-primary text-primary-foreground scale-105 shadow-md"
+                            : "bg-muted text-muted-foreground hover:bg-muted/80 hover:scale-102"
+                            }`}
                         >
                           {option}
                         </button>
                       ))}
                     </div>
                   </div>
+
+
+
+
                 </div>
 
                 <div className="bg-secondary/10 border border-secondary/20 rounded-lg p-4 transition-all duration-300 hover:bg-secondary/15">
@@ -156,9 +185,8 @@ export default function OnboardingFlow({ onComplete }: OnboardingFlowProps) {
             ) : (
               <div className="flex flex-col items-center justify-center py-12">
                 <div
-                  className={`text-6xl font-bold text-primary mb-4 transition-all duration-300 transform ${
-                    countdown === 0 ? "scale-150 opacity-0" : "scale-100 opacity-100"
-                  }`}
+                  className={`text-6xl font-bold text-primary mb-4 transition-all duration-300 transform ${countdown === 0 ? "scale-150 opacity-0" : "scale-100 opacity-100"
+                    }`}
                 >
                   {countdown}
                 </div>
