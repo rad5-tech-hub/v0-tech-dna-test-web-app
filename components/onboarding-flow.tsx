@@ -13,6 +13,8 @@ import {
   CardTitle,
 } from "@/components/ui/card"
 import { Toaster, toast } from "sonner"
+import { Info } from "lucide-react"
+import * as Tooltip from "@radix-ui/react-tooltip"
 
 export interface OnboardingFlowProps {
   onComplete: (
@@ -34,9 +36,7 @@ export default function OnboardingFlow({ onComplete }: OnboardingFlowProps) {
   const [showCountdown, setShowCountdown] = useState(false)
   const [isVisible, setIsVisible] = useState(false)
 
-  // live errors (only email is live)
   const [emailError, setEmailError] = useState<string | null>(null)
-  // error shown **only on submit**
   const [phoneError, setPhoneError] = useState<string | null>(null)
 
   useEffect(() => {
@@ -48,13 +48,7 @@ export default function OnboardingFlow({ onComplete }: OnboardingFlowProps) {
 
     const timer = setTimeout(() => {
       if (countdown === 0) {
-        onComplete(
-          name.trim(),
-          gender,
-          email.trim(),
-          phone.trim(),
-          intendedTrack
-        )
+        onComplete(name.trim(), gender, email.trim(), phone.trim(), intendedTrack)
       } else {
         setCountdown((c) => (c !== null ? c - 1 : c))
       }
@@ -63,9 +57,8 @@ export default function OnboardingFlow({ onComplete }: OnboardingFlowProps) {
     return () => clearTimeout(timer)
   }, [countdown, name, gender, email, phone, onComplete, intendedTrack])
 
-  /* ---------- VALIDATORS ---------- */
   const isValidEmail = (value: string) => {
-    if (!value) return true // optional
+    if (!value) return true
     const re = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/i
     return re.test(value.trim())
   }
@@ -76,7 +69,6 @@ export default function OnboardingFlow({ onComplete }: OnboardingFlowProps) {
     return digits.length >= 7
   }
 
-  /* ---------- LIVE EMAIL VALIDATION ---------- */
   useEffect(() => {
     if (!email) {
       setEmailError(null)
@@ -85,26 +77,21 @@ export default function OnboardingFlow({ onComplete }: OnboardingFlowProps) {
     setEmailError(isValidEmail(email) ? null : "Please enter a valid email address")
   }, [email])
 
-  /* ---------- SUBMIT HANDLER ---------- */
   const handleStartTest = () => {
-    // Reset phone error before new validation
     setPhoneError(null)
 
-    // ---- Required fields ----
     if (!name.trim() || !gender || !phone.trim()) {
       toast.error("Please provide your name, gender, and phone number.")
       if (!phone.trim()) setPhoneError("Phone number is required")
       return
     }
 
-    // ---- Phone format ----
     if (!isValidPhone(phone)) {
       setPhoneError("Please enter a valid phone number (e.g., +234… or 080…)")
       toast.error("Please enter a valid phone number.")
       return
     }
 
-    // ---- Email (optional but must be valid if filled) ----
     if (email.trim() && !isValidEmail(email.trim())) {
       toast.error("Invalid email address. Please correct it or leave it empty.")
       return
@@ -114,11 +101,10 @@ export default function OnboardingFlow({ onComplete }: OnboardingFlowProps) {
     setCountdown(3)
   }
 
-  /* ---------- BUTTON ENABLED STATE ---------- */
   const isFormReady = name.trim() && gender && isValidPhone(phone)
 
   return (
-    <>
+    <Tooltip.Provider>
       <div
         className={`min-h-screen flex items-center justify-center bg-gradient-to-br from-primary/5 via-background to-secondary/5 p-4 transition-opacity duration-500 ${
           isVisible ? "opacity-100" : "opacity-0"
@@ -141,7 +127,7 @@ export default function OnboardingFlow({ onComplete }: OnboardingFlowProps) {
             {!showCountdown ? (
               <>
                 <div className="space-y-4">
-                  {/* ---- Name ---- */}
+                  {/* Name */}
                   <div>
                     <label className="text-sm font-medium text-foreground mb-2 block">
                       Full Name *
@@ -154,7 +140,7 @@ export default function OnboardingFlow({ onComplete }: OnboardingFlowProps) {
                     />
                   </div>
 
-                  {/* ---- Email (optional) ---- */}
+                  {/* Email */}
                   <div>
                     <label className="text-sm font-medium text-foreground mb-2 block">
                       Email (Your result will be emailed to you)
@@ -171,7 +157,7 @@ export default function OnboardingFlow({ onComplete }: OnboardingFlowProps) {
                     )}
                   </div>
 
-                  {/* ---- Phone (required, error only on submit) ---- */}
+                  {/* Phone */}
                   <div>
                     <label className="text-sm font-medium text-foreground mb-2 block">
                       Phone Number *
@@ -188,11 +174,31 @@ export default function OnboardingFlow({ onComplete }: OnboardingFlowProps) {
                     )}
                   </div>
 
-                  {/* ---- Intended Track ---- */}
+                  {/* Intended Track with Tooltip */}
                   <div>
-                    <label className="text-sm font-medium text-foreground mb-2 block">
+                    <label className="text-sm font-medium text-foreground mb-2 block flex items-center justify-between">
                       What track do you intend on going for?
+                      <Tooltip.Root>
+                        <Tooltip.Trigger asChild>
+                          <button
+                            type="button"
+                            className="text-muted-foreground hover:text-foreground hover:scale-1.2 transition-colors"
+                          >
+                            <a href="/tracks"><Info className="h-4 w-4"/></a>
+                          </button>
+                        </Tooltip.Trigger>
+                        <Tooltip.Portal>
+                          <Tooltip.Content
+                            className="bg-popover text-popover-foreground text-xs rounded-md px-3 py-2 shadow-lg border border-border max-w-xs animate-in fade-in-0 zoom-in-95"
+                            sideOffset={5}
+                          >
+                            Gain more insight about the stated courses
+                            <Tooltip.Arrow className="fill-popover" />
+                          </Tooltip.Content>
+                        </Tooltip.Portal>
+                      </Tooltip.Root>
                     </label>
+
                     <Select.Root
                       defaultValue="default"
                       onValueChange={setIntendedTrack}
@@ -200,7 +206,9 @@ export default function OnboardingFlow({ onComplete }: OnboardingFlowProps) {
                       <Select.Trigger className="w-full!" />
                       <Select.Content className="w-full!" position="popper">
                         <Select.Group>
-                          <Select.Item value="default" disabled>Select an intended track</Select.Item>
+                          <Select.Item value="default" disabled>
+                            Select an intended track
+                          </Select.Item>
                           {[
                             "Data Analytics",
                             "Cybersecurity",
@@ -217,7 +225,7 @@ export default function OnboardingFlow({ onComplete }: OnboardingFlowProps) {
                     </Select.Root>
                   </div>
 
-                  {/* ---- Gender ---- */}
+                  {/* Gender */}
                   <div>
                     <label className="text-sm font-medium text-foreground mb-2 block">
                       Gender *
@@ -275,6 +283,6 @@ export default function OnboardingFlow({ onComplete }: OnboardingFlowProps) {
       </div>
 
       <Toaster position="top-center" />
-    </>
+    </Tooltip.Provider>
   )
 }
