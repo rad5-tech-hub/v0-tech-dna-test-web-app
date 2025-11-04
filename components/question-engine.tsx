@@ -30,7 +30,7 @@ export default function QuestionEngine({ session, onComplete }: QuestionEnginePr
   useEffect(() => {
     // Shuffle and select 50 random questions
     const shuffled = [...QUESTIONS].sort(() => Math.random() - 0.5)
-    setSelectedQuestions(shuffled.slice(0, 30))
+    setSelectedQuestions(shuffled.slice(0, 3))
     setIsLoading(false)
   }, [])
 
