@@ -16,6 +16,7 @@ export interface TestSession {
   email: string
   answers: Record<number, number>,
   intendedTrack?:string,
+  phone?:string,
   results?: {
     scores: Record<string, number>
     percentages: Record<string, number>
@@ -28,9 +29,10 @@ export default function Home() {
   const [appState, setAppState] = useState<AppState>("onboarding")
   const [session, setSession] = useState<TestSession | null>(null)
 
-  const handleOnboardingComplete = (name: string, gender: string, email: string,intendedTrack?:string) => {
+  const handleOnboardingComplete = (name: string, gender: string, email: string,phone:string,intendedTrack?:string) => {
     setSession({
       name,
+      phone ,
       gender,
       email,
       intendedTrack,
@@ -46,6 +48,7 @@ export default function Home() {
       session: {
         // keep payload minimal and serializable
         name: finalSession.name,
+        phone:finalSession?.phone?.toString() || "",
         gender: finalSession.gender,
         email: finalSession.email ?? "",
         date: new Date().toISOString(),
@@ -56,7 +59,8 @@ export default function Home() {
         testId: finalSession.startTime ?? Date.now(), // idempotency key
       },
     }
-
+    
+    
     const res = await fetch("/api/save-report", {
       method: "POST",
       headers: { "Content-Type": "application/json" },

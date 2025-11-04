@@ -63,7 +63,8 @@ export async function POST(req: Request) {
 
     // Prepare row data
     const percentages = session.percentages ?? {};
-    const intendedTrack = session.intendedTrack || ""
+    const intendedTrack = session?.intendedTrack || ""
+    const phone = session?.phone || ""
     const row = [
       new Date(session.date ?? Date.now()).toLocaleString(), // A: TIME
       session.name ?? "",                                    // B: NAME
@@ -76,8 +77,9 @@ export async function POST(req: Request) {
       percentages[skillKeyMap["Web Development"]] ?? percentages["Web Development"] ?? "", // I: WEB DEVELOPMENT
       percentages[skillKeyMap["Product Design"]] ?? percentages["Product Design"] ?? "",  // J: PRODUCT DESIGN
       percentages[skillKeyMap["Digital Marketing"]] ?? percentages["Digital Marketing"] ?? "", // K: DIGITAL MARKETING
-      intendedTrack || ""   // L : INTENDED TRACK
-    ];
+      intendedTrack || "",   // L : INTENDED TRACK
+      phone   // M : Phone Number
+    ]; 
 
     // Log payload for debugging
     console.log("Session payload:", JSON.stringify(session, null, 2));
