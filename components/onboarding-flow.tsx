@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react"
 import { Select } from "@radix-ui/themes"
 import Image from "next/image"
+import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import {
@@ -106,7 +107,7 @@ export default function OnboardingFlow({ onComplete }: OnboardingFlowProps) {
   return (
     <Tooltip.Provider>
       <div
-        className={`min-h-screen flex items-center justify-center bg-gradient-to-br from-primary/5 via-background to-secondary/5 p-4 transition-opacity duration-500 ${
+        className={`min-h-screen flex items-center justify-center bg-linear-to-br from-primary/5 via-background to-secondary/5 p-4 transition-opacity duration-500 ${
           isVisible ? "opacity-100" : "opacity-0"
         }`}
       >
@@ -176,7 +177,7 @@ export default function OnboardingFlow({ onComplete }: OnboardingFlowProps) {
 
                   {/* Intended Track with Tooltip */}
                   <div>
-                    <label className="text-sm font-medium text-foreground mb-2 block flex items-center justify-between">
+                    <label className="text-sm font-medium text-foreground mb-2 block lg:flex items-center justify-between">
                       What track do you intend on going for?
                       <Tooltip.Root>
                         <Tooltip.Trigger asChild>
@@ -184,7 +185,7 @@ export default function OnboardingFlow({ onComplete }: OnboardingFlowProps) {
                             type="button"
                             className="text-muted-foreground hover:text-foreground hover:scale-1.2 transition-colors"
                           >
-                            <a href="/tracks"><Info className="h-4 w-4"/></a>
+                            <Link href="/tracks"><Info className="h-4 w-4"/></Link>
                           </button>
                         </Tooltip.Trigger>
                         <Tooltip.Portal>
