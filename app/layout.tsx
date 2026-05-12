@@ -10,6 +10,9 @@ export const metadata: Metadata = {
   title: "RAD5 TechDNA Test - Discover Your Digital Career Path",
   description: "Take the RAD5 TechDNA Test to discover which digital skill area fits you best",
   generator: "v0.app",
+  icons: {
+    icon: "/logo.png",
+  },
 }
 
 export default function RootLayout({
