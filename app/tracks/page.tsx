@@ -3,7 +3,7 @@ import TrackDetailsAccordion from "@/components/trackdetailsaccordion"
 
 export default function Page() {
   return (
-    <main className="min-h-screen bg-gradient-to-br from-primary/5 via-background to-secondary/5 py-12">
+    <main className="min-h-screen bg-linear-to-br from-primary/5 via-background to-secondary/5 py-12">
       <TrackDetailsAccordion />
 
       <footer className="mt-16">

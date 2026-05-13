@@ -194,7 +194,7 @@ export default function ResultsDashboard({ session, onRetake }: ResultsDashboard
     <>
 
       <div
-        className={`min-h-screen bg-gradient-to-br from-primary/5 via-background to-secondary/5 p-4 transition-opacity duration-500 ${isVisible ? "opacity-100" : "opacity-0"
+        className={`min-h-screen bg-linear-to-br from-primary/5 via-background to-secondary/5 p-4 transition-opacity duration-500 ${isVisible ? "opacity-100" : "opacity-0"
           }`}
       >
         <div className="max-w-4xl mx-auto">
