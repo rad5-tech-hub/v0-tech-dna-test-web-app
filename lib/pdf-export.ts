@@ -190,7 +190,19 @@ export async function generatePDFBlob(session: TestSession): Promise<Blob> {
   doc.setFontSize(10);
   doc.setTextColor(0, 0, 0);
 
-  const skills = ["Data Analytics", "Cybersecurity", "Web Development", "Product Design", "Digital Marketing"];
+  const skills = [
+    "Product Design",
+    "Frontend Development",
+    "Backend Development",
+    "Data Analytics",
+    "Digital Marketing",
+    "Cybersecurity",
+    "Graphics Design",
+    "Video Editing",
+    "Content Creation",
+    "Product Management",
+    "Technical Writing"
+  ];
   const percentages = session.results.percentages ?? {};
 
   for (const skill of skills) {
@@ -233,16 +245,17 @@ export async function generatePDFBlob(session: TestSession): Promise<Blob> {
   doc.setTextColor(0, 0, 0);
 
   const recommendations: Record<string, string> = {
-    "Data Analytics":
-      "You have a strong natural alignment toward Data Analytics due to your analytical mindset, attention to detail, and ability to find patterns in complex information. Consider exploring foundational data science and business intelligence learning paths.",
-    Cybersecurity:
-      "You have a strong natural alignment toward Cybersecurity due to your analytical mindset, love for structure, and desire to protect systems and information. Consider exploring foundational cybersecurity learning paths.",
-    "Web Development":
-      "You have a strong natural alignment toward Web Development due to your creative problem-solving skills, attention to user experience, and technical curiosity. Consider exploring full-stack development frameworks and modern web technologies.",
-    "Product Design":
-      "You have a strong natural alignment toward Product Design due to your user-centric thinking, creative vision, and ability to balance aesthetics with functionality. Consider exploring UX/UI design principles and prototyping tools.",
-    "Digital Marketing":
-      "You have a strong natural alignment toward Digital Marketing due to your communication skills, strategic thinking, and ability to understand audience behavior. Consider exploring digital marketing strategies and analytics platforms.",
+    "Product Design": "You have a natural gift for user-centric thinking and creative vision. You enjoy balancing aesthetics with functionality to make products simpler and more beautiful.",
+    "Frontend Development": "You enjoy the logic of code combined with visual creativity. You are a 'digital builder' who likes bringing designs to life for users to interact with.",
+    "Backend Development": "You thrive on solving difficult challenges and understanding how systems work 'under the hood.' You have the persistence needed to build the brain of an application.",
+    "Data Analytics": "You are a digital detective. You find joy in discovering hidden patterns within numbers and transforming information into useful insights for smart decision-making.",
+    "Digital Marketing": "You are a communicator and a strategist. You enjoy social media and have a natural instinct for getting the right message to the right audience to help brands grow.",
+    "Cybersecurity": "You have a 'security thinking' mindset. You are protective and analytical, making you excellent at defending systems from hackers and investigating problems.",
+    "Graphics Design": "Your eye for color and layout is your superpower. You enjoy expressing ideas visually and creating designs that leave a lasting impression.",
+    "Video Editing": "You have a talent for storytelling through motion. You enjoy the creative process of editing and producing videos that capture people's attention.",
+    "Content Creation": "You are naturally expressive and thrive on social engagement. You enjoy learning random interesting things and sharing them with an audience online.",
+    "Product Management": "You are a leader and an organizer. You enjoy talking to people, organizing operations, and ensuring that businesses and products run smoothly.",
+    "Technical Writing": "You excel at explaining complex things simply. Your attention to detail and structured thinking make you perfect for creating useful documentation and guides."
   };
 
   const recommendation = recommendations[session.results.topSkill] ?? "";

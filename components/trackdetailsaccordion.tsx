@@ -34,32 +34,32 @@ const tracks = [
     value: "cybersecurity",
     title: "Cybersecurity",
     description: "Cybersecurity is about protecting organizations from online threats. If you enjoy solving puzzles, investigating problems, and keeping things safe, this field is for you.",
-  },
-  {
-    value: "graphics-design",
-    title: "Graphics Design",
-    description: "Graphic design is the art of visual communication. Designers use typography, imagery, and color to convey messages and create visual impact.",
-  },
-  {
-    value: "video-editing",
-    title: "Video Editing",
-    description: "Video editing is the process of manipulating and rearranging video shots to create a new work. It’s essential for film, television, and social media content.",
-  },
-  {
-    value: "content-creation",
-    title: "Content Creation",
-    description: "Content creators produce entertaining or educational material that caters to the interests and challenges of a target audience.",
-  },
-  {
-    value: "product-management",
-    title: "Product Management",
-    description: "Product managers guide the success of a product and lead the cross-functional team that is responsible for improving it.",
-  },
-  {
-    value: "technical-writing",
-    title: "Technical Writing",
-    description: "Technical writers prepare instruction manuals, how-to guides, and other supporting documents to communicate complex and technical information more easily.",
-  },
+  }
+  // {
+  //   value: "graphics-design",
+  //   title: "Graphics Design",
+  //   description: "Graphic design is the art of visual communication. Designers use typography, imagery, and color to convey messages and create visual impact.",
+  // },
+  // {
+  //   value: "video-editing",
+  //   title: "Video Editing",
+  //   description: "Video editing is the process of manipulating and rearranging video shots to create a new work. It’s essential for film, television, and social media content.",
+  // },
+  // {
+  //   value: "content-creation",
+  //   title: "Content Creation",
+  //   description: "Content creators produce entertaining or educational material that caters to the interests and challenges of a target audience.",
+  // },
+  // {
+  //   value: "product-management",
+  //   title: "Product Management",
+  //   description: "Product managers guide the success of a product and lead the cross-functional team that is responsible for improving it.",
+  // },
+  // {
+  //   value: "technical-writing",
+  //   title: "Technical Writing",
+  //   description: "Technical writers prepare instruction manuals, how-to guides, and other supporting documents to communicate complex and technical information more easily.",
+  // },
 ]
 
 export default function TrackDetailsAccordion() {

@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
+import { Check } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Progress } from "@/components/ui/progress"
@@ -99,7 +100,9 @@ export default function QuestionEngine({ session, onComplete }: QuestionEnginePr
         >
           <CardHeader>
             <CardTitle className="text-2xl leading-relaxed">{currentQuestion.text}</CardTitle>
-            <p className="text-sm text-muted-foreground mt-1 font-medium">Select your top 2 answers</p>
+            <p className="text-sm text-muted-foreground mt-1 font-medium">
+              Select up to 2 answers ({answers[currentQuestion.question_id]?.length || 0}/2 selected)
+            </p>
           </CardHeader>
 
           <CardContent className="space-y-3">
@@ -109,7 +112,7 @@ export default function QuestionEngine({ session, onComplete }: QuestionEnginePr
               <button
                 key={index}
                 onClick={() => toggleAnswer(index)}
-                className={`w-full p-4 text-left rounded-lg border-2 transition-all duration-200 transform hover:scale-102 ${
+                className={`w-full p-4 text-left rounded-lg border-2 transition-all duration-200 cursor-pointer transform hover:scale-102 ${
                   isSelected
                     ? "border-primary bg-primary/10 shadow-md"
                     : "border-border hover:border-primary/50 hover:bg-muted/50"
@@ -117,12 +120,12 @@ export default function QuestionEngine({ session, onComplete }: QuestionEnginePr
               >
                 <div className="flex items-center gap-3">
                   <div
-                    className={`w-5 h-5 rounded-full border-2 flex items-center justify-center transition-all duration-200 ${
+                    className={`w-5 h-5 rounded border-2 flex items-center justify-center transition-all duration-200 ${
                       isSelected ? "border-primary bg-primary" : "border-border"
                     }`}
                   >
                     {isSelected && (
-                      <div className="w-2 h-2 bg-primary-foreground rounded-full"></div>
+                      <Check className="w-3.5 h-3.5 text-primary-foreground" />
                     )}
                   </div>
                   <span className="font-medium text-foreground">{answer}</span>
@@ -144,14 +147,14 @@ export default function QuestionEngine({ session, onComplete }: QuestionEnginePr
             }}
             disabled={currentIndex === 0}
             variant="outline"
-            className="flex-1 transition-all duration-200 hover:scale-105"
+            className="flex-1 cursor-pointer transition-all duration-200 hover:scale-105"
           >
             Previous
           </Button>
           <Button
             onClick={handleNext}
             disabled={!answers[currentQuestion.question_id]?.length}
-            className="flex-1 bg-primary hover:bg-primary/90 text-primary-foreground transition-all duration-200 hover:scale-105 disabled:scale-100"
+            className="flex-1 bg-primary hover:bg-primary/90 cursor-pointer text-primary-foreground transition-all duration-200 hover:scale-105 disabled:scale-100"
           >
             {currentIndex === selectedQuestions.length - 1 ? "Complete Test" : "Next"}
           </Button>

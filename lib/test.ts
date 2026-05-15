@@ -101,7 +101,7 @@ export const questionsTests = [
   },
   {
     question_id: 17,
-    text: "Which activity sounds least boring?",
+    text: "Which activity sounds more interesting?",
     answers: ["Editing pictures/videos", "Solving puzzles", "Learning computer tricks", "Posting content online", "Researching information"],
     weights: { "Video Editing": [3,0,0,0,0], "Graphics Design": [3,0,0,0,0], "Backend Development": [0,3,0,0,0], "Cybersecurity": [0,3,2,0,0], "Frontend Development": [0,0,3,0,0], "Digital Marketing": [0,0,0,3,0], "Content Creation": [0,0,0,3,0], "Technical Writing": [0,0,0,0,3], "Data Analytics": [0,0,0,0,2] }
   },

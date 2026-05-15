@@ -17,6 +17,8 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from "recharts"
+import Image from "next/image"
+import logo from '../public/logo.png'
 import { generatePDF, generatePDFBlob } from "@/lib/pdf-export"
 
 
@@ -86,7 +88,7 @@ export default function ResultsDashboard({ session, onRetake }: ResultsDashboard
     }))
   }, [session.results])
 
-  const pieData = useMemo(() => chartData.filter((item) => item.percentage > 0), [chartData])
+  const pieData = useMemo(() => chartData.filter((item) => item.percentage > 8), [chartData])
 
   const sortedSkills = useMemo(() => {
     return SKILLS.slice().sort((a, b) => {
@@ -208,7 +210,7 @@ export default function ResultsDashboard({ session, onRetake }: ResultsDashboard
           {/* Header */}
           <div className="text-center mb-8">
             <div className="inline-block bg-primary/10 rounded-lg p-3 mb-4 transform transition-transform duration-500 hover:scale-105">
-              <div className="text-3xl font-bold text-primary">RAD5</div>
+              <Image src={logo} alt="RAD5 Logo" className="h-12 w-auto" width={100} height={100}/>
             </div>
             <h1 className="text-4xl font-bold text-foreground mb-2">Your TechDNA Result</h1>
             <p className="text-muted-foreground">Personalized Career Path Recommendation</p>
@@ -235,6 +237,26 @@ export default function ResultsDashboard({ session, onRetake }: ResultsDashboard
               </div>
             </CardContent>
           </Card>
+
+          {/* Top 3 Recommended Careers */}
+          <div className="space-y-6 mb-8">
+            <h2 className="text-2xl font-bold text-foreground">Top 3 Recommended Careers</h2>
+            {session.results.topMatches.map((match, idx) => (
+              <Card key={match.name} className={`shadow-lg border-primary/20 hover:shadow-xl transition-all ${idx === 0 ? 'bg-primary/5 border-2 border-primary' : 'bg-card'}`}>
+                <CardHeader>
+                  <div className="flex justify-between items-center">
+                    <CardTitle className={idx === 0 ? "text-primary text-2xl" : "text-xl"}>
+                      {idx + 1}. {match.name}
+                    </CardTitle>
+                    <span className="font-bold text-primary text-xl">{match.percentage}% Match</span>
+                  </div>
+                </CardHeader>
+            <CardContent>
+                  <p className="text-foreground leading-relaxed">{RECOMMENDATIONS[match.name]}</p>
+            </CardContent>
+          </Card>
+            ))}
+          </div>
 
           {/* Charts */}
           <div className="gap-8 mb-8">
@@ -267,7 +289,7 @@ export default function ResultsDashboard({ session, onRetake }: ResultsDashboard
             <Card className="shadow-lg hover:shadow-xl transition-shadow duration-300 mt-7">
               <CardHeader>
                 <CardTitle>Skill Breakdown</CardTitle>
-                <CardDescription>Percentage composition of your profile</CardDescription>
+                <CardDescription>Percentage composition of your profile (showing only skills higher than 8%)</CardDescription>
               </CardHeader>
               <CardContent>
                 <ResponsiveContainer width="100%" height={300}>
@@ -327,26 +349,6 @@ export default function ResultsDashboard({ session, onRetake }: ResultsDashboard
             </CardContent>
           </Card>
 
-          {/* Recommendation */}
-          <div className="space-y-6 mb-8">
-            <h2 className="text-2xl font-bold text-foreground">Top 3 Recommended Careers</h2>
-            {session.results.topMatches.map((match, idx) => (
-              <Card key={match.name} className={`shadow-lg border-primary/20 hover:shadow-xl transition-all ${idx === 0 ? 'bg-primary/5 border-2 border-primary' : 'bg-card'}`}>
-                <CardHeader>
-                  <div className="flex justify-between items-center">
-                    <CardTitle className={idx === 0 ? "text-primary text-2xl" : "text-xl"}>
-                      {idx + 1}. {match.name}
-                    </CardTitle>
-                    <span className="font-bold text-primary text-xl">{match.percentage}% Match</span>
-                  </div>
-                </CardHeader>
-            <CardContent>
-                  <p className="text-foreground leading-relaxed">{RECOMMENDATIONS[match.name]}</p>
-            </CardContent>
-          </Card>
-            ))}
-          </div>
-
           {/* Contact Info */}
           <Card className="shadow-lg mb-8 bg-secondary/5 border-secondary/20 hover:shadow-xl transition-shadow duration-300">
             <CardContent className="pt-6">
@@ -370,7 +372,7 @@ export default function ResultsDashboard({ session, onRetake }: ResultsDashboard
          <div className="flex flex-col md:flex-row gap-3 w-full mx-auto">
   <Button
     onClick={() => generatePDF(session)}
-    className="w-full md:flex-1 py-4 text-base bg-accent hover:bg-accent/90 text-accent-foreground transition-all duration-200 transform hover:scale-105"
+    className="w-full md:flex-1 py-4 text-base bg-accent cursor-pointer hover:bg-accent/90 text-accent-foreground transition-all duration-200 transform hover:scale-105"
     size="lg"
   >
     Download PDF Report
@@ -381,7 +383,7 @@ export default function ResultsDashboard({ session, onRetake }: ResultsDashboard
       onClick={handleEmailReport}
       variant="outline"
       disabled={mailButtonLoading}
-      className="w-full md:flex-1 py-4 text-base bg-transparent transition-all duration-200 transform hover:scale-105 flex items-center justify-center gap-2"
+      className="w-full md:flex-1 py-4 text-base cursor-pointer bg-transparent transition-all duration-200 transform hover:scale-105 flex items-center justify-center gap-2"
       size="lg"
       aria-busy={mailButtonLoading}
     >
@@ -393,7 +395,7 @@ export default function ResultsDashboard({ session, onRetake }: ResultsDashboard
   <Button
     onClick={onRetake}
     variant="outline"
-    className="w-full md:flex-1 py-4 text-base bg-transparent transition-all duration-200 transform hover:scale-105"
+    className="w-full md:flex-1 py-4 text-base cursor-pointer bg-transparent transition-all duration-200 transform hover:scale-105"
     size="lg"
   >
     Retake Test

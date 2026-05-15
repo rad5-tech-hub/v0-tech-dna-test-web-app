@@ -183,7 +183,7 @@ export default function OnboardingFlow({ onComplete }: OnboardingFlowProps) {
                         <Tooltip.Trigger asChild>
                           <button
                             type="button"
-                            className="text-muted-foreground hover:text-foreground hover:scale-1.2 transition-colors"
+                            className="text-muted-foreground hover:text-foreground hover:scale-1.2 transition-colors cursor-pointer"
                           >
                             <Link href="/tracks"><Info className="h-4 w-4"/></Link>
                           </button>
@@ -237,7 +237,7 @@ export default function OnboardingFlow({ onComplete }: OnboardingFlowProps) {
                           key={option}
                           type="button"
                           onClick={() => setGender(option)}
-                          className={`py-2 px-3 rounded-md text-sm font-medium transition-all duration-200 transform ${
+                          className={`py-2 px-3 rounded-md text-sm font-medium transition-all duration-200 transform cursor-pointer ${
                             gender === option
                               ? "bg-primary text-primary-foreground scale-105 shadow-md"
                               : "bg-muted text-muted-foreground hover:bg-muted/80 hover:scale-102"
@@ -261,7 +261,7 @@ export default function OnboardingFlow({ onComplete }: OnboardingFlowProps) {
                 <Button
                   onClick={handleStartTest}
                   disabled={!isFormReady}
-                  className="w-full bg-primary hover:bg-primary/90 text-primary-foreground transition-all duration-200 transform hover:scale-105 disabled:scale-100 disabled:opacity-50"
+                  className="w-full bg-primary hover:bg-primary/90 text-primary-foreground transition-all duration-200 transform hover:scale-105 disabled:scale-100 disabled:opacity-50 cursor-pointer"
                   size="lg"
                 >
                   Start Test
