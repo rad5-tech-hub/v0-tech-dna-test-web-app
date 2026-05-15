@@ -6,34 +6,59 @@ import { cn } from "@/lib/utils" // optional: if you have a cn utility
 
 const tracks = [
   {
-    value: "cybersecurity",
-    title: "Cybersecurity",
-    description:
-      "Cybersecurity is about protecting people and organizations from online threats. Think of it like being a digital security guard who helps prevent hackers from stealing information or damaging systems. If you enjoy solving puzzles, investigating problems, and keeping things safe, this field might be for you. You can work as a security analyst, ethical hacker, or cybersecurity engineer.",
-  },
-  {
-    value: "digital-marketing",
-    title: "Digital Marketing",
-    description:
-      "Digital marketing is how businesses promote their products or services online. It’s about getting the right message to the right people using platforms like Google, Instagram, Facebook, TikTok, and email. If you love creativity, social media, and helping brands reach more people, this is your space. You can become a social media manager, content marketer, or ads specialist.",
-  },
-  {
     value: "product-design",
     title: "Product Design (UI/UX Design)",
-    description:
-      "Product Design is about creating digital products (like apps and websites) that are easy and enjoyable to use. UI means the “look,” which includes colors, buttons, and layout. UX means the “feel,” which focuses on how people move through the app or website. If you like creativity, problem-solving, and making things beautiful and simple, this path fits you. You can work as a UI/UX designer or product designer.",
-  },
-  {
-    value: "data-analytics",
-    title: "Data Analytics",
-    description:
-      "Data Analytics is about using numbers to make smart decisions. Companies have a lot of information (data), but they need people to interpret it, like detectives turning numbers into insights. If you like working with numbers, finding patterns, and making sense of information, this track is for you. You can become a data analyst, business analyst, or data visualization expert.",
+    description: "Product Design is about creating digital products (like apps and websites) that are easy and enjoyable to use. If you like creativity, problem-solving, and making things beautiful and simple, this path fits you.",
   },
   {
     value: "frontend-development",
     title: "Frontend Development",
-    description:
-      "Frontend Development is about building what users see and interact with on websites and apps. It’s like being a digital builder who turns a design into something people can click, scroll, and use. If you enjoy logic, creativity, and bringing ideas to life through code, this is for you. You can work as a frontend developer or web developer.",
+    description: "Frontend Development is about building what users see and interact with on websites and apps. It’s like being a digital builder who turns a design into something people can use.",
+  },
+  {
+    value: "backend-development",
+    title: "Backend Development",
+    description: "Backend Development focuses on the server-side, databases, and application logic. It's the engine that makes the application work and process data.",
+  },
+  {
+    value: "data-analytics",
+    title: "Data Analytics",
+    description: "Data Analytics is about using numbers to make smart decisions. If you like working with numbers, finding patterns, and making sense of information, this track is for you.",
+  },
+  {
+    value: "digital-marketing",
+    title: "Digital Marketing",
+    description: "Digital marketing is how businesses promote their products online. If you love creativity, social media, and helping brands reach more people, this is your space.",
+  },
+  {
+    value: "cybersecurity",
+    title: "Cybersecurity",
+    description: "Cybersecurity is about protecting organizations from online threats. If you enjoy solving puzzles, investigating problems, and keeping things safe, this field is for you.",
+  },
+  {
+    value: "graphics-design",
+    title: "Graphics Design",
+    description: "Graphic design is the art of visual communication. Designers use typography, imagery, and color to convey messages and create visual impact.",
+  },
+  {
+    value: "video-editing",
+    title: "Video Editing",
+    description: "Video editing is the process of manipulating and rearranging video shots to create a new work. It’s essential for film, television, and social media content.",
+  },
+  {
+    value: "content-creation",
+    title: "Content Creation",
+    description: "Content creators produce entertaining or educational material that caters to the interests and challenges of a target audience.",
+  },
+  {
+    value: "product-management",
+    title: "Product Management",
+    description: "Product managers guide the success of a product and lead the cross-functional team that is responsible for improving it.",
+  },
+  {
+    value: "technical-writing",
+    title: "Technical Writing",
+    description: "Technical writers prepare instruction manuals, how-to guides, and other supporting documents to communicate complex and technical information more easily.",
   },
 ]
 

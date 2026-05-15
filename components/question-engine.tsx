@@ -4,7 +4,6 @@ import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Progress } from "@/components/ui/progress"
-// import { QUESTIONS } from "@/lib/questions"
 import { questionsTests as QUESTIONS } from "@/lib/test"
 import { calculateScores } from "@/lib/scoring"
 
@@ -12,38 +11,49 @@ interface TestSession {
   name: string
   gender: string
   startTime: number
-  answers: Record<number, number>
+  answers: Record<number, number[]>
 }
 
 interface QuestionEngineProps {
   session: TestSession
-  onComplete: (answers: Record<number, number>, results: any) => void
+  onComplete: (answers: Record<number, number[]>, results: any) => void
 }
 
 export default function QuestionEngine({ session, onComplete }: QuestionEngineProps) {
   const [selectedQuestions, setSelectedQuestions] = useState<typeof QUESTIONS>([])
   const [currentIndex, setCurrentIndex] = useState(0)
-  const [answers, setAnswers] = useState<Record<number, number>>({})
+  const [answers, setAnswers] = useState<Record<number, number[]>>({})
   const [isLoading, setIsLoading] = useState(true)
   const [isTransitioning, setIsTransitioning] = useState(false)
 
   useEffect(() => {
-    // Shuffle and select 50 random questions
-    const shuffled = [...QUESTIONS].sort(() => Math.random() - 0.5)
-    setSelectedQuestions(shuffled.slice(0, 30))
+    // We use all 22 questions for the human version
+    setSelectedQuestions(QUESTIONS)
     setIsLoading(false)
   }, [])
 
   const currentQuestion = selectedQuestions[currentIndex]
   const progress = ((currentIndex + 1) / selectedQuestions.length) * 100
 
-  const handleAnswer = (answerIndex: number) => {
-    const newAnswers = {
-      ...answers,
-      [currentQuestion.question_id]: answerIndex,
-    }
-    setAnswers(newAnswers)
+  const toggleAnswer = (index: number) => {
+    const currentSelections = answers[currentQuestion.question_id] || []
+    let newSelections: number[]
 
+    if (currentSelections.includes(index)) {
+      newSelections = currentSelections.filter(i => i !== index)
+    } else {
+      // Limit to Top 2 selections
+      if (currentSelections.length >= 2) return
+      newSelections = [...currentSelections, index]
+    }
+
+    setAnswers({
+      ...answers,
+      [currentQuestion.question_id]: newSelections,
+    })
+  }
+
+  const handleNext = () => {
     if (currentIndex < selectedQuestions.length - 1) {
       setIsTransitioning(true)
       setTimeout(() => {
@@ -52,9 +62,9 @@ export default function QuestionEngine({ session, onComplete }: QuestionEnginePr
       }, 300)
     } else {
       // Test complete
-      const results = calculateScores(selectedQuestions, newAnswers)
+      const results = calculateScores(selectedQuestions, answers)
       const timeTaken = Math.round((Date.now() - session.startTime) / 60000)
-      onComplete(newAnswers, { ...results, timeTaken })
+      onComplete(answers, { ...results, timeTaken })
     }
   }
 
@@ -89,15 +99,18 @@ export default function QuestionEngine({ session, onComplete }: QuestionEnginePr
         >
           <CardHeader>
             <CardTitle className="text-2xl leading-relaxed">{currentQuestion.text}</CardTitle>
+            <p className="text-sm text-muted-foreground mt-1 font-medium">Select your top 2 answers</p>
           </CardHeader>
 
           <CardContent className="space-y-3">
-            {currentQuestion.answers.map((answer, index) => (
+            {currentQuestion.answers.map((answer, index) => {
+              const isSelected = (answers[currentQuestion.question_id] || []).includes(index)
+              return (
               <button
                 key={index}
-                onClick={() => handleAnswer(index)}
+                onClick={() => toggleAnswer(index)}
                 className={`w-full p-4 text-left rounded-lg border-2 transition-all duration-200 transform hover:scale-102 ${
-                  answers[currentQuestion.question_id] === index
+                  isSelected
                     ? "border-primary bg-primary/10 shadow-md"
                     : "border-border hover:border-primary/50 hover:bg-muted/50"
                 }`}
@@ -105,17 +118,17 @@ export default function QuestionEngine({ session, onComplete }: QuestionEnginePr
                 <div className="flex items-center gap-3">
                   <div
                     className={`w-5 h-5 rounded-full border-2 flex items-center justify-center transition-all duration-200 ${
-                      answers[currentQuestion.question_id] === index ? "border-primary bg-primary" : "border-border"
+                      isSelected ? "border-primary bg-primary" : "border-border"
                     }`}
                   >
-                    {answers[currentQuestion.question_id] === index && (
+                    {isSelected && (
                       <div className="w-2 h-2 bg-primary-foreground rounded-full"></div>
                     )}
                   </div>
                   <span className="font-medium text-foreground">{answer}</span>
                 </div>
               </button>
-            ))}
+            )})}
           </CardContent>
         </Card>
 
@@ -136,8 +149,8 @@ export default function QuestionEngine({ session, onComplete }: QuestionEnginePr
             Previous
           </Button>
           <Button
-            onClick={() => handleAnswer(answers[currentQuestion.question_id] ?? -1)}
-            disabled={answers[currentQuestion.question_id] === undefined}
+            onClick={handleNext}
+            disabled={!answers[currentQuestion.question_id]?.length}
             className="flex-1 bg-primary hover:bg-primary/90 text-primary-foreground transition-all duration-200 hover:scale-105 disabled:scale-100"
           >
             {currentIndex === selectedQuestions.length - 1 ? "Complete Test" : "Next"}

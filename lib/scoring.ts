@@ -1,7 +1,20 @@
-import type { QUESTIONS } from "./questions"
+import { questionsTests as QUESTIONS } from "./test"
 
-export function calculateScores(selectedQuestions: typeof QUESTIONS, answers: Record<number, number>) {
-  const skills = ["Data Analytics", "Cybersecurity", "Web Development", "Product Design", "Digital Marketing"]
+export function calculateScores(selectedQuestions: typeof QUESTIONS, answers: Record<number, number[]>) {
+  const skills = [
+    "Product Design", 
+    "Frontend Development", 
+    "Backend Development", 
+    "Data Analytics", 
+    "Digital Marketing", 
+    "Cybersecurity", 
+    "Graphics Design", 
+    "Video Editing", 
+    "Content Creation", 
+    "Product Management", 
+    "Technical Writing"
+  ]
+  
   const scores: Record<string, number> = {}
 
   // Initialize scores
@@ -9,33 +22,40 @@ export function calculateScores(selectedQuestions: typeof QUESTIONS, answers: Re
     scores[skill] = 0
   })
 
-  // Calculate scores based on answers
+  // Calculate scores
   selectedQuestions.forEach((question) => {
-    const answerIndex = answers[question.question_id]
-    if (answerIndex !== undefined) {
-      skills.forEach((skill) => {
-        const weights = question.weights[skill as keyof typeof question.weights]
-        if (weights && weights[answerIndex] !== undefined) {
-          scores[skill] += weights[answerIndex]
-        }
-      })
-    }
+    const answerIndices = answers[question.question_id] || []
+    skills.forEach((skill) => {
+      const weights = question.weights[skill as keyof typeof question.weights]
+      if (weights && answerIndices.length > 0) {
+        answerIndices.forEach(idx => {
+          if (weights[idx] !== undefined) {
+            scores[skill] += weights[idx]
+          }
+        })
+      }
+    })
   })
 
-  // Calculate total and percentages
-  const total = Object.values(scores).reduce((a, b) => a + b, 0)
+  // Percentage Recommendation Logic
+  // Career Score ÷ Highest Career Score × 100
+  const highestScore = Math.max(...Object.values(scores), 1);
   const percentages: Record<string, number> = {}
 
   skills.forEach((skill) => {
-    percentages[skill] = total > 0 ? Math.round((scores[skill] / total) * 100) : 0
+    percentages[skill] = Math.round((scores[skill] / highestScore) * 100)
   })
 
-  // Find top skill
-  const topSkill = skills.reduce((prev, current) => (percentages[current] > percentages[prev] ? current : prev))
+  // Get top 3
+  const sortedResults = skills
+    .map(skill => ({ name: skill, percentage: percentages[skill], score: scores[skill] }))
+    .sort((a, b) => b.score - a.score)
+    .slice(0, 3)
 
   return {
     scores,
     percentages,
-    topSkill,
+    topSkill: sortedResults[0].name,
+    topMatches: sortedResults
   }
 }

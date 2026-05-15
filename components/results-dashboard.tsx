@@ -25,13 +25,14 @@ interface TestSession {
   gender: string
   startTime: number
   email: string
-  answers: Record<number, number>,
+  answers: Record<number, number[]>,
   intendedTrack?:string,
   results?: {
     scores: Record<string, number>
     percentages: Record<string, number>
     topSkill: string
-    timeTaken: number
+    timeTaken: number,
+    topMatches: { name: string; percentage: number; score: number }[]
   }
 }
 
@@ -41,19 +42,25 @@ interface ResultsDashboardProps {
 }
 
 const COLORS = ["#FF6B6B", "#4ECDC4", "#45B7D1", "#FFA07A", "#98D8C8"]
-const SKILLS = ["Data Analytics", "Cybersecurity", "Web Development", "Product Design", "Digital Marketing"]
+const SKILLS = [
+  "Product Design", "Frontend Development", "Backend Development", 
+  "Data Analytics", "Digital Marketing", "Cybersecurity", 
+  "Graphics Design", "Video Editing", "Content Creation", 
+  "Product Management", "Technical Writing"
+]
 
 const RECOMMENDATIONS: Record<string, string> = {
-  "Data Analytics":
-    "You have a strong natural alignment toward Data Analytics due to your analytical mindset, attention to detail, and ability to find patterns in complex information. Consider exploring foundational data science and business intelligence learning paths.",
-  Cybersecurity:
-    "You have a strong natural alignment toward Cybersecurity due to your analytical mindset, love for structure, and desire to protect systems and information. Consider exploring foundational cybersecurity learning paths.",
-  "Web Development":
-    "You have a strong natural alignment toward Web Development due to your creative problem-solving skills, attention to user experience, and technical curiosity. Consider exploring full-stack development frameworks and modern web technologies.",
-  "Product Design":
-    "You have a strong natural alignment toward Product Design due to your user-centric thinking, creative vision, and ability to balance aesthetics with functionality. Consider exploring UX/UI design principles and prototyping tools.",
-  "Digital Marketing":
-    "You have a strong natural alignment toward Digital Marketing due to your communication skills, strategic thinking, and ability to understand audience behavior. Consider exploring digital marketing strategies and analytics platforms.",
+  "Product Design": "You have a natural gift for user-centric thinking and creative vision. You enjoy balancing aesthetics with functionality to make products simpler and more beautiful.",
+  "Frontend Development": "You enjoy the logic of code combined with visual creativity. You are a 'digital builder' who likes bringing designs to life for users to interact with.",
+  "Backend Development": "You thrive on solving difficult challenges and understanding how systems work 'under the hood.' You have the persistence needed to build the brain of an application.",
+  "Data Analytics": "You are a digital detective. You find joy in discovering hidden patterns within numbers and transforming information into useful insights for smart decision-making.",
+  "Digital Marketing": "You are a communicator and a strategist. You enjoy social media and have a natural instinct for getting the right message to the right audience to help brands grow.",
+  "Cybersecurity": "You have a 'security thinking' mindset. You are protective and analytical, making you excellent at defending systems from hackers and investigating problems.",
+  "Graphics Design": "Your eye for color and layout is your superpower. You enjoy expressing ideas visually and creating designs that leave a lasting impression.",
+  "Video Editing": "You have a talent for storytelling through motion. You enjoy the creative process of editing and producing videos that capture people's attention.",
+  "Content Creation": "You are naturally expressive and thrive on social engagement. You enjoy learning random interesting things and sharing them with an audience online.",
+  "Product Management": "You are a leader and an organizer. You enjoy talking to people, organizing operations, and ensuring that businesses and products run smoothly.",
+  "Technical Writing": "You excel at explaining complex things simply. Your attention to detail and structured thinking make you perfect for creating useful documentation and guides."
 }
 
 export default function ResultsDashboard({ session, onRetake }: ResultsDashboardProps) {
@@ -321,15 +328,24 @@ export default function ResultsDashboard({ session, onRetake }: ResultsDashboard
           </Card>
 
           {/* Recommendation */}
-          <Card className="shadow-lg mb-8 border-primary/20 bg-primary/5 hover:shadow-xl transition-shadow duration-300">
-            <CardHeader>
-              <CardTitle className="text-primary">Your Top Match: {session.results.topSkill}</CardTitle>
-              <CardDescription>Personalized Recommendation</CardDescription>
-            </CardHeader>
+          <div className="space-y-6 mb-8">
+            <h2 className="text-2xl font-bold text-foreground">Top 3 Recommended Careers</h2>
+            {session.results.topMatches.map((match, idx) => (
+              <Card key={match.name} className={`shadow-lg border-primary/20 hover:shadow-xl transition-all ${idx === 0 ? 'bg-primary/5 border-2 border-primary' : 'bg-card'}`}>
+                <CardHeader>
+                  <div className="flex justify-between items-center">
+                    <CardTitle className={idx === 0 ? "text-primary text-2xl" : "text-xl"}>
+                      {idx + 1}. {match.name}
+                    </CardTitle>
+                    <span className="font-bold text-primary text-xl">{match.percentage}% Match</span>
+                  </div>
+                </CardHeader>
             <CardContent>
-              <p className="text-foreground leading-relaxed">{RECOMMENDATIONS[session.results.topSkill]}</p>
+                  <p className="text-foreground leading-relaxed">{RECOMMENDATIONS[match.name]}</p>
             </CardContent>
           </Card>
+            ))}
+          </div>
 
           {/* Contact Info */}
           <Card className="shadow-lg mb-8 bg-secondary/5 border-secondary/20 hover:shadow-xl transition-shadow duration-300">
